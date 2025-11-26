@@ -1,0 +1,71 @@
+{
+  "summary": {
+    "total_vulnerabilities": 6,
+    "critical": 3,
+    "high": 2,
+    "medium": 1,
+    "low": 0
+  },
+  "details": [
+    {
+      "id": 1,
+      "file": "inputs.py",
+      "line_numbers": [8,10,12],
+      "vulnerability_type": "Hardcoded secrets",
+      "severity": "High",
+      "description": "API keys, DB password and JWT secret are hardcoded in source, exposing them in version control and at runtime.",
+      "fix_explanation": "Move secrets to environment variables and use `os.getenv`. Do not store secrets in source control. Use a secrets manager for production.",
+      "secure_code_snippet": "THIRD_PARTY_API_KEY = os.getenv(\"THIRD_PARTY_API_KEY\")\nDB_PASSWORD = os.getenv(\"DB_PASSWORD\")\nJWT_SECRET = os.getenv(\"JWT_SECRET\")"
+    },
+    {
+      "id": 2,
+      "file": "inputs.py",
+      "line_numbers": [18,21],
+      "vulnerability_type": "SQL Injection",
+      "severity": "Critical",
+      "description": "User input is interpolated directly into an SQL query string allowing SQL injection and data leakage or modification.",
+      "fix_explanation": "Use parameterized SQL queries (cursor.execute with placeholders) to prevent SQL injection.",
+      "secure_code_snippet": "query = \"SELECT id, name, email FROM users WHERE name = ?\"\ncursor.execute(query, (username,))"
+    },
+    {
+      "id": 3,
+      "file": "inputs.py",
+      "line_numbers": [27],
+      "vulnerability_type": "Server Side Request Forgery (SSRF) / Unsafe HTTP GET",
+      "severity": "High",
+      "description": "requests.get is used with unvalidated user input which may allow an attacker to access internal resources or perform unwanted requests.",
+      "fix_explanation": "Validate URLs: enforce http/https, check allowlist of domains, and set reasonable timeouts for requests. Optionally use network-level firewalling.",
+      "secure_code_snippet": "if not is_safe_url(url):\n    raise ValueError(\"URL not allowed\")\nres = requests.get(url, timeout=5)"
+    },
+    {
+      "id": 4,
+      "file": "inputs.py",
+      "line_numbers": [32],
+      "vulnerability_type": "Command Injection",
+      "severity": "Critical",
+      "description": "The code uses os.system with user-supplied filename, allowing shell command injection and arbitrary command execution.",
+      "fix_explanation": "Avoid shell usage. Use Python tarfile module to create archives and validate filenames to prevent metacharacters and path traversal.",
+      "secure_code_snippet": "with tarfile.open(archive_name, \"w:gz\") as tar:\n    tar.add(filename, arcname=os.path.basename(filename), recursive=False)"
+    },
+    {
+      "id": 5,
+      "file": "inputs.py",
+      "line_numbers": [36, 37, 38],
+      "vulnerability_type": "Use of eval for config parsing",
+      "severity": "Critical",
+      "description": "The code falls back to `eval` if JSON parsing fails, which allows execution of arbitrary code present in input config strings.",
+      "fix_explanation": "Only accept JSON configs and fail gracefully. Do not use eval. Use ast.literal_eval if you need to support Python literals safely.",
+      "secure_code_snippet": "return json.loads(config_str)"
+    },
+    {
+      "id": 6,
+      "file": "inputs.py",
+      "line_numbers": [62],
+      "vulnerability_type": "Debug mode enabled",
+      "severity": "Medium",
+      "description": "The Flask app is run with debug=True; this may expose interactive debugging and internal traces in production.",
+      "fix_explanation": "Run with debug=False in production and enable debug based on environment variables or configuration.",
+      "secure_code_snippet": "if __name__ == '__main__':\n    app.run(debug=False)"
+    }
+  ]
+}
