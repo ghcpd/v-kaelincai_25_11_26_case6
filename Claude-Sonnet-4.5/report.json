@@ -1,0 +1,91 @@
+{
+  "summary": {
+    "total_vulnerabilities": 8,
+    "critical": 5,
+    "high": 1,
+    "medium": 1,
+    "low": 1
+  },
+  "details": [
+    {
+      "id": 1,
+      "file": "input.py",
+      "line_numbers": [8],
+      "vulnerability_type": "Hardcoded API Key",
+      "severity": "Critical",
+      "description": "API key 'sk_live_1234567890abcdef' is hardcoded in the source code. This exposes sensitive credentials that could be extracted by anyone with access to the code.",
+      "fix_explanation": "Moved API key to environment variable. Now loaded using os.getenv('THIRD_PARTY_API_KEY', ''). This allows secure storage in environment configuration or secret management systems.",
+      "secure_code_snippet": "THIRD_PARTY_API_KEY = os.getenv('THIRD_PARTY_API_KEY', '')"
+    },
+    {
+      "id": 2,
+      "file": "input.py",
+      "line_numbers": [10],
+      "vulnerability_type": "Hardcoded Database Password",
+      "severity": "Critical",
+      "description": "Database password 'password123' is hardcoded in plaintext. This compromises database security and violates security best practices.",
+      "fix_explanation": "Moved database password to environment variable. Now loaded using os.getenv('DB_PASSWORD', ''). Credentials should be stored securely outside the codebase.",
+      "secure_code_snippet": "DB_PASSWORD = os.getenv('DB_PASSWORD', '')"
+    },
+    {
+      "id": 3,
+      "file": "input.py",
+      "line_numbers": [12],
+      "vulnerability_type": "Hardcoded JWT Secret",
+      "severity": "Critical",
+      "description": "JWT secret key 'my_jwt_secret_key' is hardcoded. This allows attackers to forge authentication tokens and impersonate users.",
+      "fix_explanation": "Moved JWT secret to environment variable. Now loaded using os.getenv('JWT_SECRET', ''). Secret keys must never be committed to version control.",
+      "secure_code_snippet": "JWT_SECRET = os.getenv('JWT_SECRET', '')"
+    },
+    {
+      "id": 4,
+      "file": "input.py",
+      "line_numbers": [16, 17, 18],
+      "vulnerability_type": "SQL Injection",
+      "severity": "Critical",
+      "description": "User input 'username' is directly concatenated into SQL query using f-string. Attackers can inject malicious SQL code (e.g., ' OR '1'='1) to bypass authentication, extract data, or modify the database.",
+      "fix_explanation": "Replaced string concatenation with parameterized query using '?' placeholder. The cursor.execute() method now safely binds the username parameter, preventing SQL injection attacks.",
+      "secure_code_snippet": "query = \"SELECT id, name, email FROM users WHERE name = ?\"\ncursor.execute(query, (username,))"
+    },
+    {
+      "id": 5,
+      "file": "input.py",
+      "line_numbers": [28],
+      "vulnerability_type": "Server-Side Request Forgery (SSRF)",
+      "severity": "High",
+      "description": "The function accepts arbitrary URLs without validation. Attackers can make the server access internal resources (e.g., http://localhost:6379, http://169.254.169.254/metadata) or perform port scanning.",
+      "fix_explanation": "Added comprehensive URL validation: (1) Check for HTTP/HTTPS protocols only, (2) Whitelist allowed domains, (3) Block private IP ranges and localhost, (4) Add timeout to prevent hanging requests. This prevents access to internal services.",
+      "secure_code_snippet": "parsed = urlparse(url)\nif not parsed.scheme in ['http', 'https']:\n    raise ValueError('Only HTTP/HTTPS protocols are allowed')\nif not any(allowed in domain for allowed in ALLOWED_DOMAINS):\n    raise ValueError(f'Domain {domain} is not in the allowed list')"
+    },
+    {
+      "id": 6,
+      "file": "input.py",
+      "line_numbers": [33],
+      "vulnerability_type": "Command Injection",
+      "severity": "Critical",
+      "description": "User input 'filename' is directly interpolated into shell command using f-string. Attackers can inject shell commands (e.g., 'file.txt; rm -rf /' or 'file.txt && cat /etc/passwd') to execute arbitrary code on the server.",
+      "fix_explanation": "Replaced os.system() with subprocess.run() using argument list (not shell=True). Added filename validation using regex to only allow alphanumeric characters, dots, underscores, and hyphens. This prevents command injection entirely.",
+      "secure_code_snippet": "if not re.match(r'^[\\w\\-\\.]+$', filename):\n    raise ValueError('Invalid filename')\nsubprocess.run(['tar', '-czf', 'backup.tar.gz', filename], check=True, capture_output=True, timeout=30)"
+    },
+    {
+      "id": 7,
+      "file": "input.py",
+      "line_numbers": [38, 39, 40, 41],
+      "vulnerability_type": "Arbitrary Code Execution via eval()",
+      "severity": "Critical",
+      "description": "The eval() function executes arbitrary Python code from user input. Attackers can send malicious payloads (e.g., '__import__(\"os\").system(\"rm -rf /\")') to execute any code with server privileges, leading to complete system compromise.",
+      "fix_explanation": "Removed eval() entirely. Now only json.loads() is used for parsing configuration. If JSON parsing fails, an error is returned instead of falling back to eval(). This completely eliminates arbitrary code execution risk.",
+      "secure_code_snippet": "try:\n    return json.loads(config_str)\nexcept json.JSONDecodeError as e:\n    raise ValueError(f'Invalid JSON configuration: {str(e)}')"
+    },
+    {
+      "id": 8,
+      "file": "input.py",
+      "line_numbers": [71],
+      "vulnerability_type": "Debug Mode Enabled",
+      "severity": "Medium",
+      "description": "Flask debug mode is enabled (debug=True). This exposes sensitive information including stack traces, source code, and provides an interactive debugger that can be exploited to execute arbitrary code.",
+      "fix_explanation": "Changed debug=False and added host='127.0.0.1' to restrict access. Debug mode should never be enabled in production. Also added host binding to localhost for additional security during development.",
+      "secure_code_snippet": "app.run(debug=False, host='127.0.0.1')"
+    }
+  ]
+}
