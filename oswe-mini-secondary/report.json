@@ -1,0 +1,91 @@
+{
+  "summary": {
+    "total_vulnerabilities": 8,
+    "critical": 3,
+    "high": 3,
+    "medium": 2,
+    "low": 0
+  },
+  "details": [
+    {
+      "id": 1,
+      "file": "inputs.py",
+      "line_numbers": [8, 10, 12],
+      "vulnerability_type": "Hard-coded secrets in source code",
+      "severity": "Critical",
+      "description": "API key and secrets are hard-coded in the source file enabling accidental exposure (THIRD_PARTY_API_KEY, DB_PASSWORD, JWT_SECRET).",
+      "fix_explanation": "Removed hard-coded secrets and switched to reading configuration values from environment variables. Use secure secret management for production (vaults/CI secrets).",
+      "secure_code_snippet": "THIRD_PARTY_API_KEY = os.environ.get(\"THIRD_PARTY_API_KEY\")\nDB_PASSWORD = os.environ.get(\"DB_PASSWORD\")\nJWT_SECRET = os.environ.get(\"JWT_SECRET\")"
+    },
+    {
+      "id": 2,
+      "file": "inputs.py",
+      "line_numbers": [18, 21],
+      "vulnerability_type": "SQL Injection (unsanitized SQL concatenation)",
+      "severity": "Critical",
+      "description": "User-supplied input is embedded directly into the SQL query string, allowing SQL injection.",
+      "fix_explanation": "Use parameterized SQL queries (placeholders) and validate/limit input length to avoid injection attacks.",
+      "secure_code_snippet": "query = \"SELECT id, name, email FROM users WHERE name = ? LIMIT 100\"\ncursor.execute(query, (username,))"
+    },
+    {
+      "id": 3,
+      "file": "inputs.py",
+      "line_numbers": [34],
+      "vulnerability_type": "OS command injection (shelling out with untrusted data)",
+      "severity": "High",
+      "description": "The code calls os.system with a formatted string that contains user input, enabling command injection.",
+      "fix_explanation": "Do not call the shell with user-controlled strings. Use Python's tarfile module or subprocess with argument lists and validate file paths to prevent path traversal.",
+      "secure_code_snippet": "with tarfile.open(archive_path, \"w:gz\") as tar:\n    tar.add(target_resolved, arcname=target_resolved.name)"
+    },
+    {
+      "id": 4,
+      "file": "inputs.py",
+      "line_numbers": [37, 41],
+      "vulnerability_type": "Insecure eval (arbitrary code execution)",
+      "severity": "Critical",
+      "description": "Falling back to eval() on JSON parse error allows arbitrary code execution from attacker-controlled input.",
+      "fix_explanation": "Do not use eval. Use json.loads only, with a safe fallback to ast.literal_eval if necessary, and reject or error on unsafe input.",
+      "secure_code_snippet": "try:\n    return json.loads(config_str)\nexcept json.JSONDecodeError:\n    return ast.literal_eval(config_str)  # literal_eval only for basic literals"
+    },
+    {
+      "id": 5,
+      "file": "inputs.py",
+      "line_numbers": [27, 28, 52],
+      "vulnerability_type": "Server-Side Request Forgery (SSRF) / Unsafe request handling",
+      "severity": "High",
+      "description": "requests.get() is called on user-supplied URLs without validation, timeouts, or protection from private/internal addresses.",
+      "fix_explanation": "Validate the URL (scheme only http/https), resolve hostnames and reject calls to private/loopback/reserved IPs. Add a timeout and verify SSL certificates.",
+      "secure_code_snippet": "if not _is_safe_url(url):\n    raise ValueError(\"disallowed url\")\nres = requests.get(url, timeout=5.0)\nres.raise_for_status()"
+    },
+    {
+      "id": 6,
+      "file": "inputs.py",
+      "line_numbers": [44, 45, 46, 47, 52, 58],
+      "vulnerability_type": "Insufficient input validation and unsafe request.json usage",
+      "severity": "Medium",
+      "description": "The original code used request.json[...] without checking for presence or types, which may throw exceptions or allow malformed payloads.",
+      "fix_explanation": "Use request.get_json(silent=True) or request.get_json(force=False) and validate payload keys and types; return 400 errors on missing or invalid data.",
+      "secure_code_snippet": "payload = request.get_json(silent=True)\nif not payload or 'url' not in payload: ..."
+    },
+    {
+      "id": 7,
+      "file": "inputs.py",
+      "line_numbers": [19],
+      "vulnerability_type": "Sensitive data leakage in logs",
+      "severity": "Medium",
+      "description": "The original code printed the fully formed SQL query (including user input) to stdout which may leak sensitive data to logs.",
+      "fix_explanation": "Avoid printing sensitive content. Use structured logging at appropriate levels and redact or avoid logging secrets/PII.",
+      "secure_code_snippet": "logger.debug(\"Executing DB query with parameterized input\")"
+    },
+    {
+      "id": 8,
+      "file": "inputs.py",
+      "line_numbers": [70],
+      "vulnerability_type": "Debug mode enabled in production",
+      "severity": "High",
+      "description": "app.run(debug=True) enables the Flask debugger and interactive console — dangerous in production.",
+      "fix_explanation": "Control debug mode via an environment variable; default to disabled. Never hard-code debug=True in source.",
+      "secure_code_snippet": "debug = os.environ.get(\"FLASK_DEBUG\", \"false\").lower() in (\"1\", \"true\", \"yes\")\napp.run(debug=debug)"
+    }
+  ]
+}

@@ -1,0 +1,69 @@
+[2025-11-26T07:33:05.216595Z] Starting auto_test
+[2025-11-26T07:33:05.281130Z] Detected Windows environment
+[2025-11-26T07:33:05.281678Z] RUN: run_test.bat
+[2025-11-26T07:33:05.580774Z] VULNERABILITIES FOUND in input_backup.py: hardcoded_secret, eval_usage, os_system, sql_injection_like, unsafe_requests_get, debug_enabled, unsafe_request_json_access, return_eval
+- hardcoded_secret
+- eval_usage
+- os_system
+- sql_injection_like
+- unsafe_requests_get
+- debug_enabled
+- unsafe_request_json_access
+- return_eval
+OK: original file failed checks as expected
+VULNERABILITIES FOUND in inputs.py: eval_usage
+- eval_usage
+ERROR: repaired file still has issues
+
+[2025-11-26T07:33:05.581189Z] TEST FAILED
+[2025-11-26T07:33:30.146240Z] Starting auto_test
+[2025-11-26T07:33:30.202795Z] Detected Windows environment
+[2025-11-26T07:33:30.203251Z] RUN: run_test.bat
+[2025-11-26T07:33:30.475040Z] VULNERABILITIES FOUND in input_backup.py: hardcoded_secret, eval_usage, os_system, sql_injection_like, unsafe_requests_get, debug_enabled, unsafe_request_json_access, return_eval
+- hardcoded_secret
+- eval_usage
+- os_system
+- sql_injection_like
+- unsafe_requests_get
+- debug_enabled
+- unsafe_request_json_access
+- return_eval
+OK: original file failed checks as expected
+OK: No obvious insecure patterns detected in inputs.py
+OK: repaired file passed checks
+
+[2025-11-26T07:33:30.475610Z] TEST PASSED
+[2025-11-26T07:39:28.335929Z] Starting auto_test
+[2025-11-26T07:39:28.393887Z] Detected Windows environment
+[2025-11-26T07:39:28.394417Z] RUN: run_test.bat
+[2025-11-26T07:39:28.638312Z] VULNERABILITIES FOUND in input_backup.py: hardcoded_secret, eval_usage, os_system, sql_injection_like, unsafe_requests_get, debug_enabled, unsafe_request_json_access, return_eval
+- hardcoded_secret
+- eval_usage
+- os_system
+- sql_injection_like
+- unsafe_requests_get
+- debug_enabled
+- unsafe_request_json_access
+- return_eval
+OK: original file failed checks as expected
+OK: No obvious insecure patterns detected in inputs.py
+OK: repaired file passed checks
+
+[2025-11-26T07:39:28.638961Z] TEST PASSED
+[2025-11-26T07:53:34.606813Z] Starting auto_test
+[2025-11-26T07:53:34.655832Z] Detected Windows environment
+[2025-11-26T07:53:34.656218Z] RUN: run_test.bat
+[2025-11-26T07:53:35.019911Z] VULNERABILITIES FOUND in input_backup.py: hardcoded_secret, eval_usage, os_system, sql_injection_like, unsafe_requests_get, debug_enabled, unsafe_request_json_access, return_eval
+- hardcoded_secret
+- eval_usage
+- os_system
+- sql_injection_like
+- unsafe_requests_get
+- debug_enabled
+- unsafe_request_json_access
+- return_eval
+OK: original file failed checks as expected
+OK: No obvious insecure patterns detected in inputs.py
+OK: repaired file passed checks
+
+[2025-11-26T07:53:35.020282Z] TEST PASSED
