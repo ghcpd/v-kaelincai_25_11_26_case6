@@ -1,0 +1,27 @@
+{
+  "category": "Feature & Improvement",
+  "subCategory": "Regression",
+  "projectContext": {
+    "name": "WebStore UI Refresh",
+    "description": "React + Tailwind storefront served via Next.js; v5.2.0 featured a clean, balanced three-column catalog layout.",
+    "currentVersion": "v5.3.1 (after global CSS utility purge)",
+    "targetVersion": "v5.3.2 with layout regression fixed"
+  },
+  "issueStatement": "Previously working scenario now fails: the catalog page that looked elegant in v5.2.0 becomes cluttered in v5.3.1—cards overlap, gutters collapse, typography scales inconsistently, and the hero banner ignores safe-area padding due to an over-aggressive Tailwind purge/utility rename. Fix is known; deliver the corrected UI plus before/after evidence.",
+  "businessGoals": [
+    "Restore the v5.2.0 visual balance while retaining new theme tokens.",
+    "Guarantee future CSS refactors include automated visual regression coverage."
+  ],
+  "technicalConstraints": {
+    "language": "TypeScript/React",
+    "stack": [
+      "Next.js 14 app directory",
+      "Tailwind CSS custom theme"
+      
+    ]
+  },
+  "nonFunctional": [
+    "Maintain Lighthouse performance within ±2% of v5.2.0.",
+    "Keep bundle size increase under 5%."
+  ]
+}
