@@ -1,0 +1,91 @@
+{
+  "summary": {
+    "total_vulnerabilities": 8,
+    "critical": 5,
+    "high": 2,
+    "medium": 1,
+    "low": 0
+  },
+  "details": [
+    {
+      "id": 1,
+      "file": "inputs.py",
+      "line_numbers": [14, 15],
+      "vulnerability_type": "SQL Injection",
+      "severity": "Critical",
+      "description": "User input is directly concatenated into SQL query string without sanitization or parameterization. An attacker can inject arbitrary SQL commands through the 'username' parameter to bypass authentication, extract data, or modify the database.",
+      "fix_explanation": "Replaced string concatenation with parameterized queries using the '?' placeholder. The username is passed as a separate parameter to cursor.execute(), which ensures SQL injection is prevented. Also added error handling with try-except block.",
+      "secure_code_snippet": "query = \"SELECT id, name, email FROM users WHERE name = ?\"\ncursor.execute(query, (username,))"
+    },
+    {
+      "id": 2,
+      "file": "inputs.py",
+      "line_numbers": [5],
+      "vulnerability_type": "Hardcoded API Key",
+      "severity": "Critical",
+      "description": "Third-party API key is hardcoded as a string literal in the source code. This credential is exposed in version control, build artifacts, and anyone with repository access can use it maliciously.",
+      "fix_explanation": "Replaced hardcoded key with environment variable using os.getenv() with a default empty string. API keys should be stored in .env files or secure secret management systems, never in code.",
+      "secure_code_snippet": "THIRD_PARTY_API_KEY = os.getenv(\"THIRD_PARTY_API_KEY\", \"\")"
+    },
+    {
+      "id": 3,
+      "file": "inputs.py",
+      "line_numbers": [9],
+      "vulnerability_type": "Hardcoded JWT Secret",
+      "severity": "Critical",
+      "description": "JWT secret key is hardcoded in the source code. An attacker with access to this secret can forge valid JWT tokens, bypassing authentication and authorization checks.",
+      "fix_explanation": "Replaced hardcoded secret with environment variable using os.getenv(). JWT secrets must be kept confidential and loaded from secure configuration sources.",
+      "secure_code_snippet": "JWT_SECRET = os.getenv(\"JWT_SECRET\", \"\")"
+    },
+    {
+      "id": 4,
+      "file": "inputs.py",
+      "line_numbers": [7],
+      "vulnerability_type": "Hardcoded Database Password",
+      "severity": "Critical",
+      "description": "Database password is hardcoded in the source code. This allows anyone with code access to connect to the database and potentially exfiltrate, modify, or delete data.",
+      "fix_explanation": "Replaced hardcoded password with environment variable using os.getenv(). Database credentials should be managed through environment variables or secure credential storage.",
+      "secure_code_snippet": "DB_PASSWORD = os.getenv(\"DB_PASSWORD\", \"\")"
+    },
+    {
+      "id": 5,
+      "file": "inputs.py",
+      "line_numbers": [24, 25],
+      "vulnerability_type": "Command Injection",
+      "severity": "Critical",
+      "description": "User-supplied filename is directly interpolated into shell command string without validation or escaping. An attacker can inject shell metacharacters to execute arbitrary commands with the application's privileges.",
+      "fix_explanation": "Added input validation to reject filenames containing '..', '/', '\\\\', and ';' characters. Used shlex.quote() to safely escape the filename before passing to the command. Implemented subprocess with proper error handling and timeout.",
+      "secure_code_snippet": "if \"..\" in filename or \"/\" in filename or \"\\\\\" in filename or \";\" in filename:\n    raise ValueError(\"Invalid filename...\")\nsafe_filename = shlex.quote(filename)\ncommand = f\"tar -czf backup.tar.gz {safe_filename}\""
+    },
+    {
+      "id": 6,
+      "file": "inputs.py",
+      "line_numbers": [29, 30],
+      "vulnerability_type": "Unsafe Code Execution (eval)",
+      "severity": "Critical",
+      "description": "The eval() function is used to parse configuration strings. eval() executes arbitrary Python code, allowing an attacker to execute malicious code through specially crafted configuration input.",
+      "fix_explanation": "Removed eval() entirely and implemented JSON parsing only using json.loads(). JSON is a data serialization format that cannot execute code. This prevents arbitrary code execution while still supporting structured configuration.",
+      "secure_code_snippet": "def load_config(config_str):\n    try:\n        return json.loads(config_str)\n    except json.JSONDecodeError as e:\n        logger.error(f\"JSON decode error: {e}\")\n        return {}"
+    },
+    {
+      "id": 7,
+      "file": "inputs.py",
+      "line_numbers": [18, 19],
+      "vulnerability_type": "Server-Side Request Forgery (SSRF)",
+      "severity": "High",
+      "description": "The application fetches any URL provided by the user without validation. An attacker can make the server fetch internal resources (file://, localhost, internal IPs), access metadata services, or probe internal networks.",
+      "fix_explanation": "Implemented URL validation using urlparse() to check scheme (http/https only). Added domain whitelist (ALLOWED_DOMAINS) to restrict which domains can be accessed. Added timeout to prevent hanging requests. Added comprehensive error handling.",
+      "secure_code_snippet": "parsed_url = urlparse(url)\nif parsed_url.scheme not in [\"http\", \"https\"]:\n    raise ValueError(\"Invalid URL scheme...\")\nif parsed_url.netloc not in ALLOWED_DOMAINS:\n    raise ValueError(f\"Domain {parsed_url.netloc} is not allowed.\")\nres = requests.get(url, timeout=5)"
+    },
+    {
+      "id": 8,
+      "file": "inputs.py",
+      "line_numbers": [36],
+      "vulnerability_type": "Debug Mode Enabled in Production",
+      "severity": "High",
+      "description": "Flask debug mode is hardcoded as True. Debug mode exposes sensitive information through detailed error pages, enables the interactive debugger, and can be exploited to execute arbitrary code on the server.",
+      "fix_explanation": "Made debug mode configurable via FLASK_DEBUG environment variable (defaults to False). Changed host binding from 0.0.0.0 to 127.0.0.1 to prevent external access in development. Debug mode should only be enabled during development.",
+      "secure_code_snippet": "debug_mode = os.getenv(\"FLASK_DEBUG\", \"False\").lower() == \"true\"\napp.run(debug=debug_mode, host=\"127.0.0.1\")"
+    }
+  ]
+}
