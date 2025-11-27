@@ -1,0 +1,91 @@
+{
+  "summary": {
+    "total_vulnerabilities": 8,
+    "critical": 3,
+    "high": 2,
+    "medium": 2,
+    "low": 1
+  },
+  "details": [
+    {
+      "id": 1,
+      "file": "input.py",
+      "line_numbers": [8, 10, 12],
+      "vulnerability_type": "Hardcoded Secrets",
+      "severity": "High",
+      "description": "API key, database password, and JWT secret are hardcoded in source, risking exposure and abuse.",
+      "fix_explanation": "Load secrets from environment variables with non-sensitive placeholders by default.",
+      "secure_code_snippet": "THIRD_PARTY_API_KEY = os.environ.get(\"THIRD_PARTY_API_KEY\", \"CHANGE_ME_THIRD_PARTY_API_KEY\")\nDB_PASSWORD = os.environ.get(\"DB_PASSWORD\", \"CHANGE_ME_DB_PASSWORD\")\nJWT_SECRET = os.environ.get(\"JWT_SECRET\", \"CHANGE_ME_JWT_SECRET\")"
+    },
+    {
+      "id": 2,
+      "file": "input.py",
+      "line_numbers": [16, 17, 18],
+      "vulnerability_type": "SQL Injection",
+      "severity": "Critical",
+      "description": "User-controlled input is interpolated directly into SQL query strings.",
+      "fix_explanation": "Use parameterized queries with placeholders and pass parameters separately.",
+      "secure_code_snippet": "cursor.execute(\"SELECT id, name, email FROM users WHERE name = ?\", (username,))"
+    },
+    {
+      "id": 3,
+      "file": "input.py",
+      "line_numbers": [19],
+      "vulnerability_type": "Sensitive Data Exposure",
+      "severity": "Low",
+      "description": "SQL queries containing user data are printed to stdout, which may leak sensitive information.",
+      "fix_explanation": "Remove the print or log safely without user data; keep logging minimal.",
+      "secure_code_snippet": "# removed verbose query logging\ncursor.execute(\"SELECT id, name, email FROM users WHERE name = ?\", (username,))"
+    },
+    {
+      "id": 4,
+      "file": "input.py",
+      "line_numbers": [27, 28, 29],
+      "vulnerability_type": "Server-Side Request Forgery (SSRF)",
+      "severity": "High",
+      "description": "Arbitrary URLs can be fetched, enabling access to internal services or metadata endpoints.",
+      "fix_explanation": "Implement URL allowlist checks and block private/loopback addresses before requesting.",
+      "secure_code_snippet": "if not _is_url_allowed(url):\n    raise ValueError(\"URL not allowed\")\nres = requests.get(url, timeout=5, allow_redirects=False)"
+    },
+    {
+      "id": 5,
+      "file": "input.py",
+      "line_numbers": [32, 33, 34],
+      "vulnerability_type": "Command Injection",
+      "severity": "Critical",
+      "description": "User input is passed to os.system for tar creation, allowing command injection.",
+      "fix_explanation": "Use Python's tarfile module and validate paths to avoid shell execution.",
+      "secure_code_snippet": "with tarfile.open(backup_name, \"w:gz\") as tar:\n    tar.add(target_path, arcname=target_path.name)"
+    },
+    {
+      "id": 6,
+      "file": "input.py",
+      "line_numbers": [37, 38, 39, 40, 41],
+      "vulnerability_type": "Arbitrary Code Execution",
+      "severity": "Critical",
+      "description": "load_config falls back to eval on untrusted input.",
+      "fix_explanation": "Replace eval with json.loads first, then ast.literal_eval for safe literal parsing; reject invalid input.",
+      "secure_code_snippet": "import ast\ntry:\n    return json.loads(config_str)\nexcept Exception:\n    return ast.literal_eval(config_str)"
+    },
+    {
+      "id": 7,
+      "file": "input.py",
+      "line_numbers": [50, 51, 52, 56, 57, 58],
+      "vulnerability_type": "Input Validation / DoS Risk",
+      "severity": "Medium",
+      "description": "request.json is accessed without validation, risking None-type errors and potential crashes.",
+      "fix_explanation": "Use request.get_json(silent=True) and validate required fields before use.",
+      "secure_code_snippet": "body = request.get_json(silent=True) or {}\nurl = body.get(\"url\", \"\").strip()\nif not url: return jsonify({\"error\": \"url is required\"}), 400"
+    },
+    {
+      "id": 8,
+      "file": "input.py",
+      "line_numbers": [69, 70],
+      "vulnerability_type": "Debug Mode Enabled",
+      "severity": "Medium",
+      "description": "Flask debug mode is always enabled, which can expose the Werkzeug debugger and code execution in production.",
+      "fix_explanation": "Make debug configurable via environment variable; default to False.",
+      "secure_code_snippet": "debug_flag = os.environ.get(\"FLASK_DEBUG\", \"false\").lower() == \"true\"\napp.run(debug=debug_flag)"
+    }
+  ]
+}
