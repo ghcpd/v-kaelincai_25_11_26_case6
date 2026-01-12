@@ -1,0 +1,182 @@
+2025-11-26 13:35:30,907 - INFO - ==================================================
+2025-11-26 13:35:30,907 - INFO - Security Audit Auto Test Suite
+2025-11-26 13:35:30,907 - INFO - ==================================================
+2025-11-26 13:35:30,907 - INFO - Timestamp: 2025-11-26T13:35:30.907658
+2025-11-26 13:35:30,907 - INFO - Python Version: 3.14.0 (tags/v3.14.0:ebf955d, Oct  7 2025, 10:15:03) [MSC v.1944 64 bit (AMD64)]
+2025-11-26 13:35:31,026 - INFO - Operating System: Windows
+2025-11-26 13:35:31,026 - INFO - Running in Docker: False
+2025-11-26 13:35:31,027 - INFO - 
+2025-11-26 13:35:31,027 - INFO - Detected Windows environment
+2025-11-26 13:35:31,027 - INFO - Running Windows test suite: run_test.bat
+2025-11-26 13:35:31,452 - INFO - Test Output:
+=== Security Vulnerability Tests (Windows) ===
+
+Test 1: Checking for hardcoded API key in insecure version...
+âœ?PASS: Insecure version contains hardcoded API key (as expected
+âœ?FAIL: Insecure version should contain hardcoded API key
+
+Test 2: Checking that secure version does NOT contain hardcoded secrets...
+âœ?PASS: Secure version does not contain hardcoded API key
+
+Test 3: Checking for hardcoded password in insecure version...
+âœ?PASS: Insecure version contains hardcoded password (as expected
+âœ?FAIL: Insecure version should contain hardcoded password
+
+Test 4: Checking that secure version does NOT contain hardcoded password...
+âœ?PASS: Secure version does not contain hardcoded password
+
+Test 5: Checking for eval() vulnerability in insecure version...
+
+2025-11-26 13:35:31,453 - WARNING - Test Errors:
+vulnerability was unexpected at this time.
+
+2025-11-26 13:35:31,453 - ERROR - ==================================================
+2025-11-26 13:35:31,453 - ERROR - TEST FAILED
+2025-11-26 13:35:31,453 - ERROR - ==================================================
+2025-11-26 13:36:32,246 - INFO - ==================================================
+2025-11-26 13:36:32,247 - INFO - Security Audit Auto Test Suite
+2025-11-26 13:36:32,247 - INFO - ==================================================
+2025-11-26 13:36:32,247 - INFO - Timestamp: 2025-11-26T13:36:32.247530
+2025-11-26 13:36:32,247 - INFO - Python Version: 3.14.0 (tags/v3.14.0:ebf955d, Oct  7 2025, 10:15:03) [MSC v.1944 64 bit (AMD64)]
+2025-11-26 13:36:32,326 - INFO - Operating System: Windows
+2025-11-26 13:36:32,326 - INFO - Running in Docker: False
+2025-11-26 13:36:32,327 - INFO - 
+2025-11-26 13:36:32,327 - INFO - Detected Windows environment
+2025-11-26 13:36:32,327 - INFO - Running Windows test suite: run_test.bat
+2025-11-26 13:36:32,541 - INFO - Test Output:
+=== Security Vulnerability Tests (Windows) ===
+
+Test 1: Checking for hardcoded API key in insecure version...
+[PASS] Insecure version contains hardcoded API key
+
+Test 2: Checking secure version does NOT contain hardcoded secrets...
+[PASS] Secure version does not contain hardcoded API key
+
+Test 3: Checking for hardcoded password in insecure version...
+[PASS] Insecure version contains hardcoded password
+
+Test 4: Checking secure version does NOT contain hardcoded password...
+[PASS] Secure version does not contain hardcoded password
+
+Test 5: Checking for eval() vulnerability in insecure version...
+
+2025-11-26 13:36:32,541 - WARNING - Test Errors:
+vulnerability was unexpected at this time.
+
+2025-11-26 13:36:32,541 - ERROR - ==================================================
+2025-11-26 13:36:32,541 - ERROR - TEST FAILED
+2025-11-26 13:36:32,542 - ERROR - ==================================================
+2025-11-26 13:46:30,330 - INFO - ==================================================
+2025-11-26 13:46:30,331 - INFO - Security Audit Auto Test Suite
+2025-11-26 13:46:30,331 - INFO - ==================================================
+2025-11-26 13:46:30,331 - INFO - Timestamp: 2025-11-26T13:46:30.331698
+2025-11-26 13:46:30,331 - INFO - Python Version: 3.14.0 (tags/v3.14.0:ebf955d, Oct  7 2025, 10:15:03) [MSC v.1944 64 bit (AMD64)]
+2025-11-26 13:46:30,497 - INFO - Operating System: Windows
+2025-11-26 13:46:30,498 - INFO - Running in Docker: False
+2025-11-26 13:46:30,498 - INFO - 
+2025-11-26 13:46:30,499 - INFO - Detected Windows environment
+2025-11-26 13:46:30,499 - INFO - Running Windows test suite: run_test.bat
+2025-11-26 13:46:31,013 - INFO - Test Output:
+=== Security Vulnerability Tests (Windows) ===
+
+Test 1: Checking for hardcoded API key in insecure version...
+[PASS] Insecure version contains hardcoded API key
+
+Test 2: Checking secure version does NOT contain hardcoded secrets...
+[PASS] Secure version does not contain hardcoded API key
+
+Test 3: Checking for hardcoded password in insecure version...
+[PASS] Insecure version contains hardcoded password
+
+Test 4: Checking secure version does NOT contain hardcoded password...
+[PASS] Secure version does not contain hardcoded password
+
+Test 5: Checking for eval vulnerability in insecure version...
+[PASS] Insecure version has eval fallback pattern
+
+Test 6: Checking secure version uses json.JSONDecodeError...
+[PASS] Secure version uses json.JSONDecodeError
+
+Test 7: Checking for os.system in insecure version...
+[PASS] Insecure version uses os.system
+
+Test 8: Checking secure version uses subprocess...
+[PASS] Secure version uses subprocess.run
+
+Test 9: Checking for input validation in secure version...
+[PASS] Secure version uses shlex.quote
+
+Test 10: Checking for parameterized queries in secure version...
+[PASS] Secure version uses parameterized queries
+
+Test 11: Checking for environment variable usage in secure version...
+[PASS] Secure version uses environment variables
+
+Test 12: Checking for security logging in secure version...
+[PASS] Secure version includes security logging
+
+============================================
+Test Results: PASSED: 12, FAILED: 0
+============================================
+TEST PASSED
+
+2025-11-26 13:46:31,013 - INFO - ==================================================
+2025-11-26 13:46:31,013 - INFO - TEST PASSED
+2025-11-26 13:46:31,014 - INFO - ==================================================
+2025-11-26 14:03:52,529 - INFO - ==================================================
+2025-11-26 14:03:52,529 - INFO - Security Audit Auto Test Suite
+2025-11-26 14:03:52,529 - INFO - ==================================================
+2025-11-26 14:03:52,529 - INFO - Timestamp: 2025-11-26T14:03:52.529890
+2025-11-26 14:03:52,530 - INFO - Python Version: 3.14.0 (tags/v3.14.0:ebf955d, Oct  7 2025, 10:15:03) [MSC v.1944 64 bit (AMD64)]
+2025-11-26 14:03:52,624 - INFO - Operating System: Windows
+2025-11-26 14:03:52,625 - INFO - Running in Docker: False
+2025-11-26 14:03:52,626 - INFO - 
+2025-11-26 14:03:52,626 - INFO - Detected Windows environment
+2025-11-26 14:03:52,627 - INFO - Running Windows test suite: run_test.bat
+2025-11-26 14:03:52,972 - INFO - Test Output:
+=== Security Vulnerability Tests (Windows) ===
+
+Test 1: Checking for hardcoded API key in insecure version...
+[PASS] Insecure version contains hardcoded API key
+
+Test 2: Checking secure version does NOT contain hardcoded secrets...
+[PASS] Secure version does not contain hardcoded API key
+
+Test 3: Checking for hardcoded password in insecure version...
+[PASS] Insecure version contains hardcoded password
+
+Test 4: Checking secure version does NOT contain hardcoded password...
+[PASS] Secure version does not contain hardcoded password
+
+Test 5: Checking for eval vulnerability in insecure version...
+[PASS] Insecure version has eval fallback pattern
+
+Test 6: Checking secure version uses json.JSONDecodeError...
+[PASS] Secure version uses json.JSONDecodeError
+
+Test 7: Checking for os.system in insecure version...
+[PASS] Insecure version uses os.system
+
+Test 8: Checking secure version uses subprocess...
+[PASS] Secure version uses subprocess.run
+
+Test 9: Checking for input validation in secure version...
+[PASS] Secure version uses shlex.quote
+
+Test 10: Checking for parameterized queries in secure version...
+[PASS] Secure version uses parameterized queries
+
+Test 11: Checking for environment variable usage in secure version...
+[PASS] Secure version uses environment variables
+
+Test 12: Checking for security logging in secure version...
+[PASS] Secure version includes security logging
+
+============================================
+Test Results: PASSED: 12, FAILED: 0
+============================================
+TEST PASSED
+
+2025-11-26 14:03:52,972 - INFO - ==================================================
+2025-11-26 14:03:52,973 - INFO - TEST PASSED
+2025-11-26 14:03:52,973 - INFO - ==================================================
